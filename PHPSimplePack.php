@@ -30,6 +30,7 @@ require('KakaoAPIService.php');
         </nav>
     </header>
     <div class="container">
+        <h2>GitHub - <a href="https://github.com/kakao-tam/KakaoAPIForPHPSimplePack">https://github.com/kakao-tam/KakaoAPIForPHPSimplePack</a></h2>
         <ul class="list-group">
             <li class="list-group-item">
                 <h2>로그인 링크 가져오기</h2>
@@ -60,6 +61,7 @@ $KakaoAPIService = new KakaoAPIService();
             </li>
 <?php
 if (!isset($_GET["code"])) {
+    echo("Kakao 로그인 시, 후속 처리 표기..");
     die();
 }
 ?>            
@@ -71,17 +73,20 @@ if (!isset($_GET["code"])) {
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade active" id="PHP1">
+                    <div class="tab-pane active" id="PHP1">
                         <p></p>
-                        <?php
-                        $client_id = $REST_API_KEY;
-                        $redirect_uri = urlencode("http://" . $_SERVER['HTTP_HOST'] . "/callBackForKakao.php");
-                        $kakaoLoginUrl = "https://kauth.kakao.com/oauth/authorize?client_id=" . $client_id . "&redirect_uri=" . $redirect_uri . "&response_type=code&state=login&scope=talk_message,friends";
-                        ?>
-                        <a href="<?= $kakaoLoginUrl ?>"><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222" /></a>
+                        <div id="Response1" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
+                        <?= $KakaoAPIService->getToken() ?>
+                        </div>
+                        <div id="Response1" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
+                        <?= $KakaoAPIService->getProfile() ?>
+                        </div>                        
                         <p></p>
                         <pre><code class="php">
-
+//토큰 조회
+&lt;?= $KakaoAPIService->getToken() ?&gt;
+//프로필 조회
+&lt;?= $KakaoAPIService->getProfile() ?&gt;
                         </code></pre>
                     </div>
                 </div>
