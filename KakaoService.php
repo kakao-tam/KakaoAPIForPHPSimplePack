@@ -11,10 +11,10 @@ class KakaoService
 
     public function __construct($return_type)
     {   //★ 수정 할 것
-        $this->JAVASCRIPT_KEY = "2d68640b56d986af5c8a48505c7c8c71"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
-        $this->REST_API_KEY   = "4408b5bb51bdf4c89879e933556a21e8"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
-        $this->ADMIN_KEY      = "72462462f6fc9baad63f2de2ad3d865b"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
-        $this->CLIENT_SECRET  = "QZhr9itOs0mxVRDxIvuOfOLzjZMc5q1U"; // https://developers.kakao.com > 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 보안
+        $this->JAVASCRIPT_KEY = ""; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+        $this->REST_API_KEY   = ""; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+        $this->ADMIN_KEY      = ""; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+        $this->CLIENT_SECRET  = ""; // https://developers.kakao.com > 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 보안
         $this->RETURN_TYPE  = $return_type;
 
         $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://");
