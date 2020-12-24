@@ -35,14 +35,22 @@ $KakaoAPIService = new KakaoAPIService();
             <li class="list-group-item">
                 <h3>사용방법</h3>
                 * PHP Simple Pack : <a href="https://github.com/kakao-tam/KakaoAPIForPHPSimplePack">[Github]</a> <a href="https://kakao-tam.tistory.com/23">[Blog]</a>
-                <pre><code class="php"> * KakaoAPIService.php 수정
-public function __construct()
+                <pre><code class="php"> * KakaoService.php 수정
+public function __construct($return_type)
 {   //★ 수정 할 것
-    $this->JAVASCRIPT_KEY = "22222222222222222222222222222222";
-    $this->REST_API_KEY   = "44444444444444444444444444444444";
-    $this->CLIENT_SECRET  = "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ";
-    $this->REDIRECT_URI = urlencode("http://".$_SERVER['HTTP_HOST']."/PHPSimplePack.php");
-...             </code></pre>
+    $this->JAVASCRIPT_KEY = "22222222222222222222222222222222"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+    $this->REST_API_KEY   = "44444444444444444444444444444444"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+    $this->ADMIN_KEY      = "77777777777777777777777777777777"; // https://developers.kakao.com > 내 애플리케이션 > 앱 설정 > 요약 정보
+    $this->CLIENT_SECRET  = "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"; // https://developers.kakao.com > 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 보안
+    $this->RETURN_TYPE  = $return_type;
+
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://");
+    $this->REDIRECT_URI          = urlencode($protocol . $_SERVER['HTTP_HOST'] . "/your_callBack");  // 내 애플리케이션 > 제품 설정 > 카카오 로그인
+    $this->LOGOUT_REDIRECT_URI   = urlencode($protocol . $_SERVER['HTTP_HOST'] . "/your_callBack"); // 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 고급 > Logout Redirect URI
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+}...             </code></pre>
                 <pre><code class="php"> * API 사용하려고 하는 곳에 선언
 &lt;?php
 require('KakaoAPIService.php');
@@ -88,13 +96,13 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP1">
                         <p></p>
                         <pre><code class="php"> * 위의 로그인을 실행하면, 설정된 CallBack Page에서 결과를 확인 할 수 있습니다.
-&lt;?= $KakaoAPIService->getToken() ?&gt; //토큰 조회
-&lt;?= $KakaoAPIService->getProfile() ?&gt; //프로필 조회</code></pre>
+&lt;?= json_encode($KakaoAPIService->getToken()) ?&gt; //토큰 조회
+&lt;?= json_encode($KakaoAPIService->getProfile()) ?&gt; //프로필 조회</code></pre>
                         <div id="Response1" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getToken() ?>
+                            <?= json_encode($KakaoAPIService->getToken()) ?>
                         </div>
                         <div id="Response2" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getProfile() ?>
+                            <?= json_encode($KakaoAPIService->getProfile()) ?>
                         </div>
                         <p></p>
                     </div>
@@ -228,10 +236,10 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//주소 조회
-&lt;?= $KakaoAPIService->getAddress("전북 삼성동 100") ?&gt;</code></pre>
+&lt;?= json_encode(($KakaoAPIService->getAddress("전북 삼성동 100")) ?&gt;</code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getAddress("전북 삼성동 100") ?>
+                            <?= json_encode($KakaoAPIService->getAddress("전북 삼성동 100")) ?>
                         </div>
                     </div>
                 </div>
@@ -247,10 +255,10 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//좌표로 행정구역정보 받기
-&lt;?= $KakaoAPIService->getCoord2regioncode(127.1086228, 37.4012191) ?&gt;</code></pre>
+&lt;?= json_encode($KakaoAPIService->getCoord2regioncode(127.1086228, 37.4012191)) ?&gt;</code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getCoord2regioncode(127.1086228, 37.4012191) ?>
+                            <?= json_encode($KakaoAPIService->getCoord2regioncode(127.1086228, 37.4012191)) ?>
                         </div>
                     </div>
                 </div>
@@ -266,11 +274,11 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//좌표로 주소 변환하기
-&lt;?= $KakaoAPIService->getCoord2address(127.1086228, 37.4012191) ?&gt;
+&lt;?= json_encode($KakaoAPIService->getCoord2address(127.1086228, 37.4012191)) ?&gt;
                         </code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getCoord2address(127.1086228, 37.4012191) ?>
+                            <?= json_encode($KakaoAPIService->getCoord2address(127.1086228, 37.4012191)) ?>
                         </div>
                     </div>
                 </div>
@@ -286,10 +294,10 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//좌표계 변환
-&lt;?= $KakaoAPIService->getTranscoord(127.1086228, 37.4012191) ?&gt;</code></pre>
+&lt;?= json_encode($KakaoAPIService->getTranscoord(127.1086228, 37.4012191)) ?&gt;</code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getTranscoord(127.1086228, 37.4012191) ?>
+                            <?= json_encode($KakaoAPIService->getTranscoord(127.1086228, 37.4012191)) ?>
                         </div>
                     </div>
                 </div>
@@ -305,10 +313,10 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//키워드로 장소 검색
-&lt;?= $KakaoAPIService->getKeywordAddress("카카오프렌즈", 127.1086228, 37.4012191) ?&gt;</code></pre>
+&lt;?= json_encode($KakaoAPIService->getKeywordAddress("카카오프렌즈", 127.1086228, 37.4012191)) ?&gt;</code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getKeywordAddress("카카오프렌즈", 127.1086228, 37.4012191) ?>
+                            <?= json_encode($KakaoAPIService->getKeywordAddress("카카오프렌즈", 127.1086228, 37.4012191)) ?>
                         </div>
                     </div>
                 </div>
@@ -324,10 +332,10 @@ $KakaoAPIService = new KakaoAPIService();
                     <div class="tab-pane active" id="PHP2">
                         <p></p>
                         <pre><code class="php">//카테고리로 장소 검색
-&lt;?= $KakaoAPIService->getCategoryAddress("PM9", 127.1086228, 37.4012191, 100) ?&gt;</code></pre>
+&lt;?= json_encode($KakaoAPIService->getCategoryAddress("PM9", 127.1086228, 37.4012191, 100)) ?&gt;</code></pre>
                         <p></p>
                         <div id="Response3" class="alert alert-primary" role="alert" style="overflow:hidden;word-wrap:break-word;" class="w-100 p-3">
-                            <?= $KakaoAPIService->getCategoryAddress("PM9", 127.1086228, 37.4012191, 100) ?>
+                            <?= json_encode($KakaoAPIService->getCategoryAddress("PM9", 127.1086228, 37.4012191, 100)) ?>
                         </div>
                     </div>
                 </div>
