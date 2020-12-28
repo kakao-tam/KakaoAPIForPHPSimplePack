@@ -18,9 +18,14 @@ class KakaoAPIService extends KakaoService
         return $this->rtn("https://kauth.kakao.com/oauth/authorize?client_id=" . $this->REST_API_KEY . "&redirect_uri=" . $this->REDIRECT_URI . "&response_type=code&state=accessToken");
     }
 
-    public function getAuthorizeLink($scope)
+    public function getKakaoLoginLinkAndReturnUrl($state)
     {
-        return $this->rtn("https://kauth.kakao.com/oauth/authorize?client_id=" . $this->REST_API_KEY . "&redirect_uri=" . $this->REDIRECT_URI . "&response_type=code&state=accessAgree&scope=" . $scope);
+        return $this->rtn("https://kauth.kakao.com/oauth/authorize?client_id=" . $this->REST_API_KEY . "&redirect_uri=" . $this->REDIRECT_URI . "&response_type=code&state=".$state);
+    }    
+
+    public function getAuthorizeLink($scope, $state = "accessAgree")
+    {
+        return $this->rtn("https://kauth.kakao.com/oauth/authorize?client_id=" . $this->REST_API_KEY . "&redirect_uri=" . $this->REDIRECT_URI . "&response_type=code&state=".$state."&scope=" . $scope);
     }
 
     public function getKakaoWithLogOutLink()
@@ -102,6 +107,62 @@ class KakaoAPIService extends KakaoService
         return $this->excuteCurl($callUrl, "GET", $headers);
     }
 
+    //Message
+    public function sendMessage($data)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        return $this->excuteCurl($callUrl, "POST", $headers, $data);
+    }    
+
+    public function sendScrap($request_url)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/scrap/send";
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $data = 'request_url='.urlencode($request_url);
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        return $this->excuteCurl($callUrl, "POST", $headers, $data);
+    }       
+    
+    public function sendCustomTemplate($template_id)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/send?template_id=".$template_id;
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        return $this->excuteCurl($callUrl, "POST", $headers);
+    }        
+
+    public function sendMessageForFriend($receiver_uuids, $message)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        $data = array($receiver_uuids);
+        $data[] = $message;
+        return $this->excuteCurl($callUrl, "POST", $headers, $data);
+    }    
+
+    public function sendScrapForFriend($receiver_uuids, $request_url)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/scrap/send";
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        $data = array($receiver_uuids);
+        $data[] = 'request_url='.urlencode($request_url);        
+        return $this->excuteCurl($callUrl, "POST", $headers, $data);
+    }       
+    
+    public function sendCustomTemplateForFriend($receiver_uuids, $template_id)
+    {
+        $callUrl = "https://kapi.kakao.com/v2/api/talk/memo/send?template_id=".$template_id;
+        $headers = array('Content-type:application/x-www-form-urlencoded;charset=utf-8');
+        $headers[] = "Authorization: Bearer " . $_SESSION["accessToken"];
+        $data = array($receiver_uuids);
+        return $this->excuteCurl($callUrl, "POST", $headers, $data);
+    }            
+
+    //Local
     public function getAddress($query)
     {
         $callUrl = "https://dapi.kakao.com/v2/local/search/address.json?query=" . urlencode($query);
@@ -144,3 +205,4 @@ class KakaoAPIService extends KakaoService
         return $this->excuteCurl($callUrl, "GET", $headers);
     }
 }
+?>
