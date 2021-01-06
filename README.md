@@ -1,6 +1,8 @@
 # KakaoAPIForPHPSimplePack
 
-2021-01-05 Update 카카오 번역 REST API 일괄 적용
+2021-01-06 Update 카카오 포즈 REST API 일괄 적용
+
+2021-01-06 Update 카카오 번역 REST API 일괄 적용
 
 2021-01-05 Update 카카오 비전 REST API 일괄 적용
 
